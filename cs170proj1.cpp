@@ -14,6 +14,9 @@ struct node{
   int cost;   // cost to get to state
 };
 
+int numExpanded = 0;
+int maxNodes = 0;
+
 node findCheapest(vector<node> nodes){
   node cheapest;
   cheapest.cost = 1000000000;
@@ -81,11 +84,19 @@ void displayProblem(problem p){
     cout << p.puzzle[6] << " " << p.puzzle[7] << " " << p.puzzle[8] << "\n";
 }
 
+void printFinalNode(node n){
+  cout << n.state.at(0) << " " << n.state.at(1) << " " << n.state.at(2) << "\n";
+  cout << n.state.at(3) << " " << n.state.at(4) << " " << n.state.at(5) << "\n";
+  cout << n.state.at(6) << " " << n.state.at(7) << " " << n.state.at(8) << "\n";
+  cout << "To solve this problem, the algorithm expanded " << numExpanded << " nodes.\n";
+  cout << "The maximum number of nodes in the queue at any one time was " << maxNodes << endl;
+  cout << "Depth of goal node: " << n.cost << "\n";
+}
+
 void printNode(node n){
   cout << n.state.at(0) << " " << n.state.at(1) << " " << n.state.at(2) << "\n";
   cout << n.state.at(3) << " " << n.state.at(4) << " " << n.state.at(5) << "\n";
   cout << n.state.at(6) << " " << n.state.at(7) << " " << n.state.at(8) << "\n";
-  cout << "cost: " << n.cost << "\n";
 }
 
 problem assignDefaultPuzzle(){
@@ -99,8 +110,8 @@ problem assignDefaultPuzzle(){
     p.puzzle.push_back(5);
     p.puzzle.push_back(6);
     p.puzzle.push_back(7);
-    p.puzzle.push_back(8);
     p.puzzle.push_back(0);
+    p.puzzle.push_back(8);
 
     return p;
 }   // assign default puzzle
@@ -280,7 +291,9 @@ problem getAlgorithm(problem p){
         p.algorithm = 3;
     }
     else
-    getAlgorithm(p);
+    p = getAlgorithm(p);
+    cout << endl;
+    cout << endl;
     return p;
 }
 
@@ -304,6 +317,28 @@ bool isonList(node n, vector<node> v){
       return true;
   }
   return false;
+}
+
+int locationOf0(node n){
+  if(n.state.at(0) == 0)
+  return 0;
+  if(n.state.at(1) == 0)
+  return 1;
+  if(n.state.at(2) == 0)
+  return 2;
+  if(n.state.at(3) == 0)
+  return 3;
+  if(n.state.at(4) == 0)
+  return 4;
+  if(n.state.at(5) == 0)
+  return 5;
+  if(n.state.at(6) == 0)
+  return 6;
+  if(n.state.at(7) == 0)
+  return 7;
+  if(n.state.at(8) == 0)
+  return 8;
+  return -1;
 }
 
 node swap1(node n){
@@ -380,56 +415,125 @@ node swap12(node n){
 }
 
 vector<node> uniformExpand(node n, vector<node> nodes, vector<node> visited){
+  int locationOfZero = locationOf0(n);
   n.cost++;
-  node temp = swap1(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 0){
+    node temp = swap1(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap3(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap2(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 1){
+    node temp = swap1(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap2(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap4(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap3(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 2){
+    node temp = swap2(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap3(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap4(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 3){
+    node temp = swap3(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap6(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap8(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap5(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 4){
+    node temp = swap4(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap6(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap7(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap9(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap6(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 5){
+    node temp = swap5(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap7(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap10(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap7(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 6){
+    node temp = swap8(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap11(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap8(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 7){
+    node temp = swap9(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap11(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap12(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap9(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
+  if(locationOfZero == 8){
+    node temp = swap10(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
+    temp = swap12(n);
+    if(!isonList(temp, visited)){ // generated node is not visited yet
+      nodes.push_back(temp);
+    }
   }
-  temp = swap10(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
-  }
-  temp = swap11(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
-  }
-  temp = swap12(n);
-  if(!isonList(temp, visited)){ // generated node is not visited yet
-    nodes.push_back(temp);
-  }
-
+  numExpanded++;
+  if(nodes.size() > maxNodes)
+    maxNodes = nodes.size();
 
   return nodes;
 }
@@ -462,6 +566,10 @@ node uniformCostSearch(vector<int> puzzle){
           return fail;
         }
         currNode = findCheapest(nodes);
+
+        cout << "Expanding cheapest node: \n";
+        printNode(currNode);
+
         removeNode(currNode, nodes, visited);
         if(checkedIfSolved(currNode)){
           cout << "solved\n";
@@ -492,7 +600,7 @@ int main(){
     else
         n = manhattanDistanceHeuristic(p.puzzle);
 
-    printNode(n);
+    printFinalNode(n);
     return 0;
 
     // vector<node> n;
